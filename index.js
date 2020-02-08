@@ -39,7 +39,7 @@ let color = d3.scaleOrdinal()
 
 let data = null;
 
-d3.csv("./nyc_bikecounts1985_2019.csv", (d) => {
+d3.csv("https://raw.githubusercontent.com/alyssapichardo/historic-count/master/nyc_bikecounts1985_2019.csv", (d) => {
   data = Object.assign(
     d3.csvParse(
       d, ({ Format, Year, ["Riders (Thousands)"]: Riders }) => (
@@ -55,7 +55,7 @@ let series = d3.stack()
   .keys(Array.from(colors.keys()))
   .value((group, key) => group.get(key).value)
   .order(d3.stackOrderReverse)
-  (Array.from(d3.nest().rollup(data, ([d]) => d, d => d.year, d => d.name).values()))
+  (Array.from(d3.rollup(data, ([d]) => d, d => d.year, d => d.name).values()))
   .map(s => (s.forEach(d => d.data = d.data.get(s.key)), s));
 
 let y = d3.scaleLinear()
